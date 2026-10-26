@@ -1,0 +1,8 @@
+# Core: detector, synthetic backend, validation, plots, tests (all offline)
+numpy>=1.24
+scipy>=1.11           # special.betaincc / betainccinv
+pandas>=2.0
+matplotlib>=3.7
+
+# Tests
+pytest>=7.0

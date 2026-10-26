@@ -1,0 +1,162 @@
+{
+  "scene": {
+    "id": "S1A_IW_GRDH_1SDV_20211021T135247_20211021T135312_040218_04C3A1_rtc",
+    "time_utc": "2021-10-21T13:52:59.791402Z",
+    "source": "pc",
+    "incidence_deg": 40.552801369353546,
+    "look_azimuth_deg": 282.90220059048204,
+    "orbit_pass": "DESCENDING",
+    "grid": {
+      "epsg": 32611,
+      "x0": 379320.0,
+      "y0": 3737420.0,
+      "pixel_m": 10.0,
+      "shape": [
+        2359,
+        2624
+      ]
+    },
+    "meta": {
+      "platform_heading_deg": 192.902200590482,
+      "prf_hz": 1451.62711219399,
+      "prfs_hz": [
+        1717.128973878037,
+        1451.62711219399,
+        1685.817302492702
+      ],
+      "incidence_plane": [
+        41.36757681829298,
+        -0.05889011572934686,
+        0.011181359803099589
+      ],
+      "relative_orbit": 71,
+      "product": "sentinel-1-rtc",
+      "quantity": "gamma0 (RTC), linear power",
+      "annotation": "S1A_IW_GRDH_1SDV_20211021T135247_20211021T135312_040218_04C3A1",
+      "landcover": "esa-worldcover"
+    }
+  },
+  "ais": {
+    "file": "ais_2021-10-21_lalb.csv.gz",
+    "reports": 158243,
+    "mmsi": 379,
+    "positioned": 299,
+    "interpolated": 274,
+    "in_scene": 288,
+    "on_water": 78
+  },
+  "clutter_fit": {
+    "vv": {
+      "L": 4.4,
+      "nu": 296.234246993346,
+      "enl": 4.3484209326554035
+    },
+    "vh": {
+      "L": 6.627926846518185,
+      "nu": Infinity,
+      "enl": 6.627926846518185
+    },
+    "tail_sample_pixels": 3646106,
+    "tail_enl": 5.198429921947919
+  },
+  "structures_px_on_water": 7767,
+  "targets_attrs": {
+    "n_clusters": 620,
+    "n_removed_small": 154,
+    "n_removed_long": 3
+  },
+  "vv": {
+    "n_detections": 463,
+    "n_vessels_in_scene": 288,
+    "n_vessels_on_water": 78,
+    "n_matched": 77,
+    "n_matched_on_water": 69,
+    "pd_all": 0.8846153846153846,
+    "n_unmatched": 386,
+    "unmatched_per_km2": 0.7873998079642023,
+    "n_fragment": 13,
+    "n_sidelobe": 40,
+    "n_ambiguity": 58,
+    "n_near_structure": 117,
+    "n_unexplained": 158,
+    "unexplained_per_km2": 0.32230354833767866,
+    "n_dark_candidates": 29,
+    "water_km2": 490.2211,
+    "gate_m": 200.0,
+    "length_n": 76,
+    "length_bias_m": -13.523193332132465,
+    "length_mae_m": 31.06398136713826,
+    "length_rel_err_median": 0.16917923013635594,
+    "length_spearman": 0.595946908489664,
+    "match_dist_median_m": 85.83003181904867
+  },
+  "vv_vh": {
+    "n_detections": 148,
+    "n_vessels_in_scene": 288,
+    "n_vessels_on_water": 78,
+    "n_matched": 71,
+    "n_matched_on_water": 68,
+    "pd_all": 0.8717948717948718,
+    "n_unmatched": 77,
+    "unmatched_per_km2": 0.1570719824177295,
+    "n_fragment": 2,
+    "n_sidelobe": 3,
+    "n_ambiguity": 14,
+    "n_near_structure": 29,
+    "n_unexplained": 29,
+    "unexplained_per_km2": 0.05915698039109292,
+    "n_dark_candidates": 29,
+    "water_km2": 490.2211,
+    "gate_m": 200.0,
+    "length_n": 70,
+    "length_bias_m": -13.084581363880616,
+    "length_mae_m": 30.19155347867371,
+    "length_rel_err_median": 0.14802796769111698,
+    "length_spearman": 0.6303235211390548,
+    "match_dist_median_m": 84.58217401266727
+  },
+  "motion": {
+    "n_moving": 17,
+    "pd_moving": 0.7647058823529411,
+    "n_stationary": 61,
+    "pd_stationary": 0.9180327868852459,
+    "shift_m_median_moving": 151.79551265544563,
+    "shift_m_max": 400.9505727445086,
+    "matched_without_shift_correction": 67,
+    "matched_with_shift_correction": 69
+  },
+  "length_vs_ais": {
+    "length_m": {
+      "n": 70,
+      "bias_m": 131.49544491508874,
+      "mae_m": 139.13062844500402,
+      "rel_err_median": 0.6913911343311154,
+      "within_25pct": 0.1
+    },
+    "length_core_m": {
+      "n": 70,
+      "bias_m": 19.603504885771237,
+      "mae_m": 34.16146408541527,
+      "rel_err_median": 0.1499538802690104,
+      "within_25pct": 0.5571428571428572
+    },
+    "length_moment_m": {
+      "n": 70,
+      "bias_m": 8.267666034345211,
+      "mae_m": 34.36240183288533,
+      "rel_err_median": 0.18660474059733495,
+      "within_25pct": 0.5142857142857142
+    },
+    "length_psf_m": {
+      "n": 70,
+      "bias_m": -13.084581363880616,
+      "mae_m": 30.19155347867371,
+      "rel_err_median": 0.14802796769111698,
+      "within_25pct": 0.5714285714285714
+    },
+    "n_large_read_short": 11,
+    "n_large": 52,
+    "n_small_read_long": 10,
+    "n_small": 15
+  }
+}

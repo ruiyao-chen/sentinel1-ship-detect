@@ -1,0 +1,12 @@
+{
+  "script": "run_synthetic.py",
+  "fast": false,
+  "seed_base": 0,
+  "utc": "2026-10-26T17:22:00+00:00",
+  "python": "3.13.5",
+  "runtime_s": 50.5,
+  "versions": {
+    "numpy": "2.1.3",
+    "pandas": "2.2.3"
+  }
+}

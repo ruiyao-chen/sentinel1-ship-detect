@@ -1,0 +1,9 @@
+# Real-data backends (scripts/fetch_data.py). Not needed for the tests.
+-r requirements.txt
+
+# Planetary Computer backend (default): reads Sentinel-1 RTC and ESA WorldCover COGs.
+rasterio>=1.3
+
+# Earth Engine backend (--backend gee). After install: `earthengine authenticate`,
+# then pass a registered Cloud project with --project.
+earthengine-api>=0.1.380

@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Tooling
+.pytest_cache/
+.DS_Store
+
+# Large or re-creatable inputs (scripts/fetch_data.py). Kept in git: the AIS
+# subset (data/ais, ~3 MB), the fixed-structure mask (data/structures_*.npz,
+# 42 KB) and data/manifest.json with the SHA-256 of every download.
+data/raw/
+data/scenes/
+*.part
+
+# Earth Engine credentials - never commit
+.config/earthengine/
+*credentials*.json

@@ -1,0 +1,9 @@
+.git
+.github
+data/raw
+data/scenes
+results
+figures
+**/__pycache__
+**/.pytest_cache
+.DS_Store

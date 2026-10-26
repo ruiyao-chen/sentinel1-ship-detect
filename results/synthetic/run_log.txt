@@ -1,0 +1,65 @@
+1. false-alarm rate vs design
+                               case  design_pfa  n_detected  expected       ratio
+           gamma sea, gamma CA-CFAR    0.010000       90077   90000.0    1.000856
+           gamma sea, gamma CA-CFAR    0.001000        8965    9000.0    0.996111
+           gamma sea, gamma CA-CFAR    0.000100         937     900.0    1.041111
+           gamma sea, gamma CA-CFAR    0.000010          93      90.0    1.033333
+           gamma sea, gamma CA-CFAR    0.000001           8       9.0    0.888889
+            K sea (nu=2), K CA-CFAR    0.010000       89835   90000.0    0.998167
+            K sea (nu=2), K CA-CFAR    0.001000        8939    9000.0    0.993222
+            K sea (nu=2), K CA-CFAR    0.000100         894     900.0    0.993333
+            K sea (nu=2), K CA-CFAR    0.000010          98      90.0    1.088889
+            K sea (nu=2), K CA-CFAR    0.000001          11       9.0    1.222222
+        K sea (nu=2), gamma CA-CFAR    0.010000      648251   90000.0    7.202789
+        K sea (nu=2), gamma CA-CFAR    0.001000      312060    9000.0   34.673333
+        K sea (nu=2), gamma CA-CFAR    0.000100      161236     900.0  179.151111
+        K sea (nu=2), gamma CA-CFAR    0.000010       88252      90.0  980.577778
+        K sea (nu=2), gamma CA-CFAR    0.000001       50400       9.0 5600.000000
+gamma sea, 2-parameter (Gaussian t)    0.010000      238342   90000.0    2.648244
+gamma sea, 2-parameter (Gaussian t)    0.001000       78198    9000.0    8.688667
+gamma sea, 2-parameter (Gaussian t)    0.000100       29655     900.0   32.950000
+gamma sea, 2-parameter (Gaussian t)    0.000010       12451      90.0  138.344444
+gamma sea, 2-parameter (Gaussian t)    0.000001        5559       9.0  617.666667
+
+2. detection probability vs SCR
+ scr_db  n_targets  pd_measured  pd_theory
+      0         96     0.000000   0.002235
+      1         96     0.000000   0.005829
+      2         96     0.031250   0.015522
+      3         96     0.020833   0.040922
+      4         96     0.093750   0.102586
+      5         96     0.197917   0.232612
+      6         96     0.416667   0.451290
+      7         96     0.729167   0.714039
+      8         96     0.885417   0.910235
+      9         96     0.968750   0.986767
+     10         96     1.000000   0.999333
+     11         96     1.000000   0.999992
+     12         96     1.000000   1.000000
+     13         96     1.000000   1.000000
+     14         96     1.000000   1.000000
+
+3. length estimates
+                  case  n_ships  n_matched  n_unexplained  length_m_bias  length_m_mae  length_core_m_bias  length_core_m_mae  length_psf_m_bias  length_psf_m_mae  length_psf_m_rel_mae
+             SCR 12 dB       50         50              0           11.0          11.0                11.0               11.0               -0.0               5.9                   0.1
+             SCR 20 dB       50         50              0           32.9          32.9                32.9               32.9                3.2               3.4                   0.0
+             SCR 30 dB       50         50              1           51.2          51.2                34.5               34.5                1.4               4.5                   0.0
+38 dB + sidelobe cross       20         20              0          764.6         764.6                36.0               36.0                2.9               5.2                   0.0
+
+4. censoring
+ censor  n_small  n_large  pd_small_10db
+  False      361      361            0.0
+   True      361      361            1.0
+
+5. demo scene end to end
+model stage   reference  n_detections  n_matched  pd_all  n_unmatched  unmatched_per_km2  n_unexplained  unexplained_per_km2  n_dark_candidates  length_bias_m  length_mae_m
+    k    VV       truth            54         54   0.740            0              0.000              0                0.000                  0          1.141         5.165
+    k VV+VH       truth            54         54   0.740            0              0.000              0                0.000                  0          1.141         5.165
+    k    VV         ais            54         50   0.735            4              0.021              4                0.021                  4          0.649         5.007
+    k    VV ais_noshift            54         41   0.603           13              0.069             13                0.069                 13         -0.672         4.783
+gamma    VV       truth           162         62   0.849          100              0.533             91                0.485                  0          4.864         5.686
+gamma VV+VH       truth            59         59   0.808            0              0.000              0                0.000                  0          4.840         5.608
+gamma    VV         ais           162         58   0.853          104              0.554             96                0.511                  4          4.403         5.485
+gamma    VV ais_noshift           162         48   0.706          114              0.607            106                0.565                 13          4.403         5.485
+
+done in 51 s -> results/synthetic, figures/

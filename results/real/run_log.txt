@@ -1,0 +1,90 @@
+scene S1A_IW_GRDH_1SDV_20211021T135247_20211021T135312_040218_04C3A1_rtc
+  2021-10-21T13:52:59.791402Z, incidence 40.6 deg, look 282.9 deg, grid (2359, 2624)
+AIS: 158,243 reports, 379 MMSI; 299 with a position at SAR time (274 interpolated)
+structure mask: 288043 px
+clutter fit VV: L 4.40, nu 296.2, ENL 4.35; VH: L 6.63, nu inf, ENL 6.63
+tested water 490.2 km2; targets 463 ({'n_clusters': 620, 'n_removed_small': 154, 'n_removed_long': 3})
+
+[VV] detections 463, AIS on water 78, detected 69 (Pd 0.885)
+  unmatched 386 (0.787/km2): fragment 13, sidelobe 40, ambiguity 58, near structure 117, unexplained 158 (0.322/km2), dark candidates 29
+  length vs AIS (n=76): bias -13.5 m, MAE 31.1 m, median rel err 0.17, Spearman 0.60
+length_bin  n_vessels  n_detected       pd   ci_low  ci_high
+    0-25 m         11           7 0.636364 0.353797 0.848338
+   25-50 m         11           8 0.727273 0.434350 0.902541
+  50-100 m          2           2 1.000000 0.342372 1.000000
+ 100-200 m         14          13 0.928571 0.685307 0.987278
+ 200-400 m         38          38 1.000000 0.908187 1.000000
+  >= 400 m          0           0      NaN      NaN      NaN
+   unknown          2           1 0.500000 0.094529 0.905471
+       all         78          69 0.884615 0.795028 0.938096
+
+[VV+VH] detections 148, AIS on water 78, detected 68 (Pd 0.872)
+  unmatched 77 (0.157/km2): fragment 2, sidelobe 3, ambiguity 14, near structure 29, unexplained 29 (0.059/km2), dark candidates 29
+  length vs AIS (n=70): bias -13.1 m, MAE 30.2 m, median rel err 0.15, Spearman 0.63
+length_bin  n_vessels  n_detected       pd   ci_low  ci_high
+    0-25 m         11           7 0.636364 0.353797 0.848338
+   25-50 m         11           7 0.636364 0.353797 0.848338
+  50-100 m          2           2 1.000000 0.342372 1.000000
+ 100-200 m         14          13 0.928571 0.685307 0.987278
+ 200-400 m         38          38 1.000000 0.908187 1.000000
+  >= 400 m          0           0      NaN      NaN      NaN
+   unknown          2           1 0.500000 0.094529 0.905471
+       all         78          68 0.871795 0.779839 0.928848
+
+moving (>= 1 kn): 17 vessels, Pd 0.7647058823529411; stationary 61, Pd 0.918; matched with/without azimuth-shift correction 69/67
+
+clutter tail (sea away from bright targets and AIS vessels):
+ t  empirical  n_above  gamma_nominal  gamma_measured_enl        k_fit
+ 3   0.004838    14514   1.543494e-03        7.057499e-04 1.751734e-03
+ 4   0.001422     4265   4.701559e-05        1.210464e-05 6.206649e-05
+ 5   0.000691     2074   1.183039e-06        1.633217e-07 1.918673e-06
+ 6   0.000423     1269   2.627493e-08        1.884800e-09 5.515214e-08
+ 8   0.000197      590   1.018492e-11        1.857895e-13 4.148146e-11
+10   0.000108      323   3.213563e-15        1.417145e-17 3.046795e-14
+15   0.000029       88   3.465354e-24        3.893821e-28 5.502166e-22
+20   0.000006       18   2.537270e-33        6.617389e-39 1.613734e-29
+
+length vs AIS (VV+VH matched): {
+ "length_m": {
+  "n": 70,
+  "bias_m": 131.49544491508874,
+  "mae_m": 139.13062844500402,
+  "rel_err_median": 0.6913911343311154,
+  "within_25pct": 0.1
+ },
+ "length_core_m": {
+  "n": 70,
+  "bias_m": 19.603504885771237,
+  "mae_m": 34.16146408541527,
+  "rel_err_median": 0.1499538802690104,
+  "within_25pct": 0.5571428571428572
+ },
+ "length_moment_m": {
+  "n": 70,
+  "bias_m": 8.267666034345211,
+  "mae_m": 34.36240183288533,
+  "rel_err_median": 0.18660474059733495,
+  "within_25pct": 0.5142857142857142
+ },
+ "length_psf_m": {
+  "n": 70,
+  "bias_m": -13.084581363880616,
+  "mae_m": 30.19155347867371,
+  "rel_err_median": 0.14802796769111698,
+  "within_25pct": 0.5714285714285714
+ },
+ "n_large_read_short": 11,
+ "n_large": 52,
+ "n_small_read_long": 10,
+ "n_small": 15
+}
+  main: K, Pfa 1e-6          VV Pd 0.885 unexpl/km2 0.322 | VV+VH Pd 0.872 unexpl/km2 0.059
+  K, Pfa 1e-05               VV Pd 0.872 unexpl/km2 0.467 | VV+VH Pd 0.846 unexpl/km2 0.061
+  K, Pfa 1e-07               VV Pd 0.885 unexpl/km2 0.261 | VV+VH Pd 0.872 unexpl/km2 0.055
+  K, Pfa 1e-08               VV Pd 0.872 unexpl/km2 0.182 | VV+VH Pd 0.859 unexpl/km2 0.041
+  gamma (L=4.4), Pfa 1e-6    VV Pd 0.885 unexpl/km2 0.339 | VV+VH Pd 0.872 unexpl/km2 0.059
+  no censoring               VV Pd 0.872 unexpl/km2 0.296 | VV+VH Pd 0.872 unexpl/km2 0.059
+  land buffer 200 m          VV Pd 0.892 unexpl/km2 0.338 | VV+VH Pd 0.878 unexpl/km2 0.050
+  no structure mask          VV Pd 0.850 unexpl/km2 0.618 | VV+VH Pd 0.850 unexpl/km2 0.173
+
+done in 145 s -> results/real, figures/real_*.png
