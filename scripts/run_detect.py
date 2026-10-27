@@ -3,7 +3,8 @@
 
 Needs the inputs from scripts/fetch_data.py (the scene cache, the AIS subset,
 and optionally the fixed-structure mask). Writes results/real/ and
-figures/real_*.png.
+figures/real_*.png (Planetary Computer), or results/real_gee/ and
+figures/real_gee_*.png (Earth Engine).
 
     python scripts/run_detect.py                       # Planetary Computer scene, LA/LB, 2021-10-21
     python scripts/run_detect.py --backend gee --project YOUR_EE_PROJECT
@@ -32,7 +33,7 @@ from scipy import ndimage  # noqa: E402
 
 from s1ship import ais, cfar, clutter, config, data, pipeline, plotting, validation as V  # noqa: E402
 
-OUT = config.RESULTS / "real"
+PREFIX = {"pc": "real", "gee": "real_gee"}     # output folder and figure prefix per backend
 KEYS = ("n_detections", "n_vessels_in_scene", "n_vessels_on_water", "n_matched_on_water", "pd_all",
         "n_unmatched", "unmatched_per_km2", "n_fragment", "n_sidelobe", "n_ambiguity", "n_near_structure",
         "n_unexplained",
@@ -98,6 +99,8 @@ def main() -> int:
     p.add_argument("--no-sensitivity", action="store_true")
     args = p.parse_args()
     t0 = time.time()
+    prefix = PREFIX[args.backend]
+    OUT = config.RESULTS / prefix
     OUT.mkdir(parents=True, exist_ok=True)
 
     scene = data.load_scene(args.backend, args.aoi, args.date, args.orbit, project=args.project)
@@ -201,7 +204,7 @@ def main() -> int:
         lstats["n_small"] = int((ais_len < 60).sum())
         print("\nlength vs AIS (VV+VH matched):", json.dumps(lstats, indent=1, default=float))
     for name, f in figs.items():
-        f.savefig(config.FIGURES / f"{name}.png", dpi=150 if name != "real_scene" else 110)
+        f.savefig(config.FIGURES / f"{name.replace('real', prefix, 1)}.png", dpi=150 if name != "real_scene" else 110)
 
     # --- sensitivity ------------------------------------------------------- #
     sens = []
@@ -246,7 +249,7 @@ def main() -> int:
                             match_gate_m=config.MATCH_GATE_M, dark_min_length_m=config.DARK_MIN_LENGTH_M),
                 inputs=man)
     (OUT / "run_info.json").write_text(json.dumps(info, indent=2, default=str) + "\n")
-    print(f"\ndone in {time.time() - t0:.0f} s -> {OUT.relative_to(config.ROOT)}, figures/real_*.png")
+    print(f"\ndone in {time.time() - t0:.0f} s -> {OUT.relative_to(config.ROOT)}, figures/{prefix}_*.png")
     return 0
 
 

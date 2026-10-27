@@ -1,0 +1,157 @@
+{
+  "scene": {
+    "id": "S1A_IW_GRDH_1SDV_20211021T135247_20211021T135312_040218_04C3A1_F596",
+    "time_utc": "2021-10-21T13:53:00.202636Z",
+    "source": "gee",
+    "incidence_deg": 39.845306396484375,
+    "look_azimuth_deg": 282.90220059048204,
+    "orbit_pass": "DESCENDING",
+    "grid": {
+      "epsg": 32611,
+      "x0": 379320.0,
+      "y0": 3737420.0,
+      "pixel_m": 10.0,
+      "shape": [
+        2359,
+        2624
+      ]
+    },
+    "meta": {
+      "platform_heading_deg": 192.902200590482,
+      "relative_orbit": 71,
+      "incidence_plane": [
+        40.76656124578,
+        -0.06064743798398102,
+        0.01068514062581994
+      ],
+      "prf_hz": 1451.63,
+      "product": "COPERNICUS/S1_GRD_FLOAT",
+      "quantity": "sigma0, linear power",
+      "time_note": "slice start/stop times (ANX) interpolated along track to the AOI centre",
+      "landcover": "ESA/WorldCover/v200"
+    }
+  },
+  "ais": {
+    "file": "ais_2021-10-21_lalb.csv.gz",
+    "reports": 158243,
+    "mmsi": 379,
+    "positioned": 299,
+    "interpolated": 274,
+    "in_scene": 288,
+    "on_water": 78
+  },
+  "clutter_fit": {
+    "vv": {
+      "L": 4.4,
+      "nu": 3.9480935409383746,
+      "enl": 2.2981359533696533
+    },
+    "vh": {
+      "L": 4.8494141567568745,
+      "nu": Infinity,
+      "enl": 4.8494141567568745
+    },
+    "tail_sample_pixels": 3398408,
+    "tail_enl": 2.637491828355134
+  },
+  "structures_px_on_water": 7748,
+  "targets_attrs": {
+    "n_clusters": 341,
+    "n_removed_small": 50,
+    "n_removed_long": 1
+  },
+  "vv": {
+    "n_detections": 290,
+    "n_vessels_in_scene": 288,
+    "n_vessels_on_water": 78,
+    "n_matched": 75,
+    "n_matched_on_water": 70,
+    "pd_all": 0.8974358974358975,
+    "n_unmatched": 215,
+    "unmatched_per_km2": 0.43854531866130675,
+    "n_fragment": 3,
+    "n_sidelobe": 24,
+    "n_ambiguity": 39,
+    "n_near_structure": 89,
+    "n_unexplained": 60,
+    "unexplained_per_km2": 0.12238474009152746,
+    "n_dark_candidates": 18,
+    "water_km2": 490.2572,
+    "gate_m": 200.0,
+    "length_n": 73,
+    "length_bias_m": -11.01910970707641,
+    "length_mae_m": 30.65144632737821,
+    "length_rel_err_median": 0.18208684568957806,
+    "length_spearman": 0.5809236669612323,
+    "match_dist_median_m": 36.276867251647076
+  },
+  "vv_vh": {
+    "n_detections": 165,
+    "n_vessels_in_scene": 288,
+    "n_vessels_on_water": 78,
+    "n_matched": 73,
+    "n_matched_on_water": 70,
+    "pd_all": 0.8974358974358975,
+    "n_unmatched": 92,
+    "unmatched_per_km2": 0.18765660147367544,
+    "n_fragment": 1,
+    "n_sidelobe": 10,
+    "n_ambiguity": 16,
+    "n_near_structure": 47,
+    "n_unexplained": 18,
+    "unexplained_per_km2": 0.03671542202745824,
+    "n_dark_candidates": 18,
+    "water_km2": 490.2572,
+    "gate_m": 200.0,
+    "length_n": 71,
+    "length_bias_m": -11.015935673672288,
+    "length_mae_m": 30.65144632737821,
+    "length_rel_err_median": 0.17642791012052736,
+    "length_spearman": 0.6020428022284836,
+    "match_dist_median_m": 33.392408912303765
+  },
+  "motion": {
+    "n_moving": 17,
+    "pd_moving": 0.7647058823529411,
+    "n_stationary": 61,
+    "pd_stationary": 0.9344262295081968,
+    "shift_m_median_moving": 148.750170418479,
+    "shift_m_max": 387.0562103906891,
+    "matched_without_shift_correction": 67,
+    "matched_with_shift_correction": 70
+  },
+  "length_vs_ais": {
+    "length_m": {
+      "n": 71,
+      "bias_m": 89.62365027653647,
+      "mae_m": 90.53935458633333,
+      "rel_err_median": 0.38531648623958176,
+      "within_25pct": 0.22535211267605634
+    },
+    "length_core_m": {
+      "n": 71,
+      "bias_m": 15.541160815962286,
+      "mae_m": 33.77544311068016,
+      "rel_err_median": 0.14749101795056838,
+      "within_25pct": 0.5492957746478874
+    },
+    "length_moment_m": {
+      "n": 71,
+      "bias_m": 11.539800572793752,
+      "mae_m": 33.33532925691094,
+      "rel_err_median": 0.16658109221526907,
+      "within_25pct": 0.5352112676056338
+    },
+    "length_psf_m": {
+      "n": 71,
+      "bias_m": -11.015935673672288,
+      "mae_m": 30.65144632737821,
+      "rel_err_median": 0.17642791012052736,
+      "within_25pct": 0.6056338028169014
+    },
+    "n_large_read_short": 10,
+    "n_large": 52,
+    "n_small_read_long": 11,
+    "n_small": 17
+  }
+}

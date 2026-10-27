@@ -1,15 +1,13 @@
 %% Resume entry for sentinel1-ship-detect (same moderncv \cventry + itemize style as the
 %% hurricane-cat-model and landsat89-xcal entries). Every number is from the runs recorded in
-%% results/synthetic/summary.json and results/real/summary.json (see the README "Results" section).
-%% Docker / CI: the Dockerfile and GitHub Actions workflow exist but had not run when this was
-%% written (no Docker on the dev machine; repo not pushed). Keep "CI" in the first bullet only
-%% once the first GitHub Actions run is green. Add \href{https://github.com/ruiyao-chen/sentinel1-ship-detect}{...}
-%% once the repo is public.
+%% results/synthetic/summary.json, results/real/summary.json and results/real_gee/summary.json
+%% (see the README "Results" section). Docker and CI: the first GitHub Actions run passed
+%% (pytest on Python 3.10-3.13, synthetic smoke run, Docker build + tests). The repo is public.
 
-\cventry{2026}{Sentinel-1 SAR Ship Detection, Validated Against AIS (independent)}{Python, Sentinel-1 SAR, CFAR, AIS, Docker, GitHub Actions (repo: \texttt{sentinel1-ship-detect})}{}{}{
+\cventry{2026}{Sentinel-1 SAR Ship Detection, Validated Against AIS (independent)}{Python, Sentinel-1 SAR, CFAR, AIS, Google Earth Engine, Docker, GitHub Actions (repo: \href{https://github.com/ruiyao-chen/sentinel1-ship-detect}{\texttt{sentinel1-ship-detect}})}{}{}{
 \begin{itemize}
-    \item Built a SAR ship-detection package: CA-CFAR with gamma/K sea clutter fitted to each scene, land and fixed-structure masking, clustering into targets with sidelobe-robust, blur-corrected length, VH confirmation, and azimuth-shift and ambiguity geometry from the product annotation; interchangeable Earth Engine, Planetary Computer and synthetic backends; 63 offline pytest tests, Dockerfile and GitHub Actions CI.
+    \item Built a SAR ship-detection package: CA-CFAR with gamma/K sea clutter fitted to each scene, land and fixed-structure masking, clustering into targets with sidelobe-robust, blur-corrected length, VH confirmation, and azimuth-shift and ambiguity geometry; interchangeable Earth Engine, Planetary Computer and synthetic backends; 63 offline pytest tests, Docker and GitHub Actions CI.
     \item Validated on synthetic speckle with injected ships: false-alarm rate within 0.89--1.22$\times$ of design down to $10^{-6}$ (the textbook Gaussian two-parameter CFAR: up to 620$\times$), detection probability within 0.035 of theory, and length within 3\,m median, including through a sidelobe cross.
-    \item Against same-minute MarineCadastre AIS over the congested Los Angeles/Long Beach anchorage (Oct.\ 2021): detected all 38 ships of 200--400\,m and 69 of 78 vessels overall; traced most VV false alarms to a sea-clutter tail $\sim$580$\times$ heavier than the speckle model and cut unexplained detections from 0.32 to 0.059 per km$^2$ with VH confirmation.
+    \item Against same-minute MarineCadastre AIS over the congested Los Angeles/Long Beach anchorage (Oct.\ 2021): detected all 38 ships of 200--400\,m and 69 of 78 vessels overall; traced most VV false alarms to a sea-clutter tail $\sim$580$\times$ heavier than the speckle model and cut unexplained detections from 0.32 to 0.059 per km$^2$ with VH confirmation; reproduced on the same pass from Earth Engine (70 of 78 vessels).
 \end{itemize}
 }

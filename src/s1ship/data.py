@@ -347,7 +347,9 @@ def _gee_scene(aoi: config.Aoi, day: str, orbit: int | None, project: str | None
         raise RuntimeError(f"no {config.EE_S1} images over {aoi.name} on {day} (orbit {orbit})")
     first = ee.Image(coll.first())
     meta = ee.Dictionary({
-        "time": first.get("system:time_start"), "pass": first.get("orbitProperties_pass"),
+        "anx": first.get("orbitProperties_ascendingNodeTime"), "start_anx": first.get("startTimeANX"),
+        "stop_anx": first.get("stopTimeANX"), "footprint": first.get("system:footprint"),
+        "heading": first.get("platformHeading"), "pass": first.get("orbitProperties_pass"),
         "orbit": first.get("relativeOrbitNumber_start"),
         "pols": first.get("transmitterReceiverPolarisation")}).getInfo()
     pols = [p for p in ("VV", "VH") if p in meta["pols"]]
@@ -361,18 +363,43 @@ def _gee_scene(aoi: config.Aoi, day: str, orbit: int | None, project: str | None
     vv = np.where(bands["VV"] > 0, bands["VV"], np.nan)
     vh = np.where(bands["VH"] > 0, bands["VH"], np.nan) if "VH" in bands else None
     angle = np.where(bands["angle"] > 0, bands["angle"], np.nan)
-    # Incidence increases away from the radar: its gradient points along the look direction.
-    gy, gx = np.gradient(angle)              # per pixel along rows (south) and columns (east)
-    look = float(np.degrees(np.arctan2(np.nanmedian(gx), -np.nanmedian(gy))) % 360.0)
     inc = float(np.nanmean(angle))
-    t = datetime.fromtimestamp(meta["time"] / 1000.0, timezone.utc).replace(tzinfo=None)
+    heading = float(meta["heading"]) % 360.0
+    look = (heading + 90.0) % 360.0          # Sentinel-1 looks right of track
+    # The angle band is stored on a coarse grid, so fit a plane rather than differentiate it.
+    rr, cc = np.mgrid[0:grid.shape[0]:8, 0:grid.shape[1]:8]
+    ok = np.isfinite(angle[rr, cc])
+    A = np.c_[np.ones(ok.sum()), cc[ok] * grid.pixel_m / 1e3, -rr[ok] * grid.pixel_m / 1e3]
+    plane, *_ = np.linalg.lstsq(A, angle[rr, cc][ok], rcond=None)
+    t = _gee_aoi_time(meta, grid, heading)
     return Scene(
         vv=vv, vh=vh, water=bands["water"] > 0.5, grid=grid, time_utc=t.isoformat() + "Z", source="gee",
         scene_id=",".join(props), incidence_deg=inc, look_azimuth_deg=look, orbit_pass=meta["pass"],
-        meta=dict(platform_heading_deg=(look - 90.0) % 360.0, relative_orbit=meta["orbit"],
+        meta=dict(platform_heading_deg=heading, relative_orbit=meta["orbit"],
+                  incidence_plane=[float(c) for c in plane],
                   prf_hz=subswath_prf(config.IW_PRF_NOMINAL_HZ, inc), product=config.EE_S1,
-                  quantity="sigma0, linear power", time_note="slice start time; +/- 15 s over the AOI",
+                  quantity="sigma0, linear power",
+                  time_note="slice start/stop times (ANX) interpolated along track to the AOI centre",
                   landcover=config.EE_LANDCOVER))
+
+
+def _gee_aoi_time(meta: dict, grid: geo.Grid, heading_deg: float) -> datetime:
+    """Azimuth time at the AOI centre, interpolated between the slice start and stop.
+
+    Earth Engine keeps no annotation, only the slice's start and stop times
+    after the ascending node and its footprint. The footprint's extent along
+    the platform heading spans that interval; the AOI centre's position along
+    the same axis gives its time to about a second.
+    """
+    fp = np.asarray(meta["footprint"]["coordinates"], dtype=float)
+    fx, fy = geo.lonlat_to_utm(fp[:, 0], fp[:, 1], grid.epsg)
+    cx, cy = geo.lonlat_to_utm(*grid.rowcol_to_lonlat(grid.shape[0] / 2, grid.shape[1] / 2), grid.epsg)
+    h = np.radians(heading_deg)
+    s = (fx - cx) * np.sin(h) + (fy - cy) * np.cos(h)      # along-track metres, AOI centre at 0
+    frac = float(np.clip(-s.min() / (s.max() - s.min()), 0.0, 1.0))
+    t0 = meta["anx"] + meta["start_anx"]
+    ms = t0 + frac * (meta["stop_anx"] - meta["start_anx"])
+    return datetime.fromtimestamp(ms / 1000.0, timezone.utc).replace(tzinfo=None)
 
 
 def _ee_compute_pixels(ee, image, grid: geo.Grid, names: list[str], tile: int = 1024) -> dict:  # pragma: no cover

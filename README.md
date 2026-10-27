@@ -25,15 +25,15 @@ what does it miss, and what fraction of what it reports is real?*
 > ### What has been run
 > | | Status |
 > |---|---|
-> | **pytest suite** (63 tests, offline, no network or credentials) | **Passing**: locally (Python 3.13) and in a clean Python 3.12 virtualenv with only `requirements.txt`. |
+> | **pytest suite** (63 tests, offline, no network or credentials) | **Passing**: locally (Python 3.13), in a clean Python 3.12 virtualenv with only `requirements.txt`, and in GitHub Actions on Python 3.10–3.13. |
 > | **Synthetic validation**: false-alarm rate, Pd vs SCR, length, censoring, demo scene | **Run** (`python scripts/run_synthetic.py`, 50 s). [Results](#1-synthetic-checks-against-injected-truth). |
 > | **Real scene**: Sentinel-1A IW GRDH, 2021-10-21 13:52:59 UTC, relative orbit 71, San Pedro Bay | **Run**, read from Microsoft Planetary Computer (Sentinel-1 RTC + annotation XML, ESA WorldCover). |
 > | **AIS**: MarineCadastre day file for 2021-10-21, filtered to the AOI box | **Run**: 353 MB streamed, 158,243 reports from 379 vessels kept (3.3 MB, in `data/ais/`); the raw file was deleted, its SHA-256 is in `data/manifest.json`. |
 > | **Fixed-structure mask**: 9 other passes of the same orbit (2020, 2023) | **Run** (`data/structures_lalb_o71.npz`). |
 > | **Detection + AIS validation** on the real scene, with an 8-variant sensitivity table | **Run** (`python scripts/run_detect.py`, 2.5 min). [Results](#2-real-scene-against-ais). |
-> | **Google Earth Engine backend** (`COPERNICUS/S1_GRD_FLOAT`) | **Written, not run.** No registered Earth Engine Cloud project was available on the machine used. Command [below](#quickstart). |
-> | **Docker image** | **Dockerfile written, not built here** (no Docker on the machine used). The CI workflow builds it and runs the tests in it. |
-> | **GitHub Actions** (pytest on Python 3.10–3.13, synthetic smoke run, Docker build + test) | **Written, not yet run**: it runs on the first push. |
+> | **Same scene from Google Earth Engine** (`COPERNICUS/S1_GRD_FLOAT`, σ⁰) with the same detector and AIS | **Run** (`run_detect.py --backend gee`, 2.5 min). Results in `results/real_gee/`, `figures/real_gee_*.png`. [Comparison](#3-the-same-scene-from-earth-engine). |
+> | **Docker image** | **Built and tested in GitHub Actions** (not built locally: no Docker on the machine used). |
+> | **GitHub Actions** (pytest on Python 3.10–3.13, synthetic smoke run, Docker build + test) | **Passing** on the first push (all six jobs). |
 > | New York / New Jersey AOI | Configured, not run. |
 
 The structure follows my other validation projects (`landsat89-xcal`,
@@ -56,6 +56,9 @@ inputs, and tests that inject a known answer and check that the code recovers it
 | Real sea clutter tail | bulk fits gamma (ENL 4.35 vs nominal 4.4), but **6.9e-4** of sea pixels exceed 5× the local mean against **1.2e-6** predicted |
 | Real length vs AIS (70 matched vessels) | median error **15 %** of AIS length, bias −13 m, 57 % within ±25 %; raw extent median error 69 % |
 | Moving vessels (≥ 1 kn) | Pd **0.76** (13/17) vs **0.92** (56/61) for stationary; predicted azimuth shifts up to 401 m |
+| Same scene from Earth Engine (GRD σ⁰ instead of RTC γ⁰) | Pd **0.897** (70/78); 66 vessels detected in both; unexplained **0.12 / km²** VV, **0.037 / km²** with VH |
+
+All rows except the last use the Planetary Computer scene.
 
 The detector does what the theory says on synthetic data, and on the real scene it
 finds every large ship. Its weak points are elsewhere. First, real sea clutter has a
@@ -83,7 +86,10 @@ independent record (AIS) on a real, crowded scene.
      WorldCover, read anonymously. The platform heading, per-line zero-Doppler time,
      incidence angle and sub-swath PRFs come from the GRD product annotation XML.
    - **Earth Engine**: `COPERNICUS/S1_GRD_FLOAT` (σ⁰, linear power) and ESA
-     WorldCover, fetched on the same UTM grid with `ee.data.computePixels`.
+     WorldCover, fetched on the same UTM grid with `ee.data.computePixels`. Earth
+     Engine keeps no annotation, so the heading comes from `platformHeading`, the
+     time over the AOI is interpolated between the slice start and stop along its
+     footprint, and the incidence is a plane fitted to the `angle` band.
    - **Synthetic**: see below.
 2. **Clutter models** (`clutter.py`). L-look gamma intensity, and the K distribution
    (gamma texture × gamma speckle) with its tail integrated numerically. ENL and
@@ -149,7 +155,7 @@ pip install -r requirements-real.txt
 python scripts/fetch_data.py                      # Sentinel-1 (Planetary Computer), AIS day, structure mask (~10 min)
 python scripts/run_detect.py                      # detection + AIS validation + sensitivity (~2.5 min)
 
-# The same scene from Google Earth Engine (not run here; needs a registered EE Cloud project)
+# The same scene from Google Earth Engine (needs a Cloud project registered for Earth Engine)
 earthengine authenticate
 python scripts/fetch_data.py --what s1 --backend gee --project YOUR_EE_PROJECT
 python scripts/run_detect.py --backend gee --project YOUR_EE_PROJECT
@@ -163,7 +169,8 @@ docker build -t s1ship . && docker run --rm s1ship
 
 `run_detect.py` writes `results/real/` (detections with flags, AIS vessels evaluated,
 Pd by length, dark candidates, clutter tail, sensitivity, `summary.json`,
-`run_info.json` with settings and input checksums) and `figures/real_*.png`.
+`run_info.json` with settings and input checksums) and `figures/real_*.png`; with
+`--backend gee`, `results/real_gee/` and `figures/real_gee_*.png`.
 
 ---
 
@@ -372,7 +379,60 @@ Pd barely moves (0.85–0.89) across two decades of design Pfa, because the ship
 count are far above any of these thresholds. The unexplained rate does move, and the
 structure mask and the VH stage do most of that work. K and gamma give the same
 answer here because this sea has no pixel-scale texture (ν ≈ 300). The synthetic
-check shows how much the choice matters on a sea that does.
+check shows how much the choice matters on a sea that does, and so does the Earth
+Engine version of the same scene below.
+
+### 3. The same scene from Earth Engine
+
+The same acquisition (`S1A_IW_GRDH_1SDV_20211021T135247_…_F596`) was fetched from
+Earth Engine's `COPERNICUS/S1_GRD_FLOAT` (σ⁰, thermal noise removed, terrain
+corrected by Earth Engine) on the identical 10 m UTM grid and run through the same
+detector, structure mask and AIS file. Only the preprocessing differs.
+
+**Geometry checks first.** Against the Planetary Computer annotation:
+
+- heading 192.90° in both;
+- AOI time 13:53:00.2 from the slice-time interpolation vs 13:52:59.8 zero-Doppler, so 0.4 s apart;
+- the incidence plane has the same slope, but Earth Engine's `angle` band reads about 0.6° lower;
+- bright targets are offset by a median 2 px (20 m) in each axis between the two grids, well inside the 200 m AIS gate.
+
+Over water, the σ⁰ scene is a median 3.7 dB darker than the γ⁰ scene. CFAR is
+scale-invariant, so this offset does not change the detections.
+
+| | Planetary Computer (RTC γ⁰) | Earth Engine (GRD σ⁰) |
+|---|---|---|
+| AIS vessels detected, VV | 69 / 78 (0.885) | 70 / 78 (0.897) |
+| ...by length: 200–400 m / 100–200 m / under 50 m | 38/38 · 13/14 · 15/22 | 38/38 · 14/14 · 15/22 |
+| Vessels detected in both runs | 66 | 66 |
+| Detected only in this run | 3 | 4 |
+| VV detections / unexplained | 463 / 158 (0.32 / km²) | 290 / 60 (0.12 / km²) |
+| VV + VH detections / unexplained | 148 / 29 (0.059 / km²) | 165 / 18 (0.037 / km²) |
+| Dark candidates | 29 | 18 (12 within 150 m of a Planetary Computer candidate) |
+| Length vs AIS, median \|error\| | 15 % (n = 70) | 18 % (n = 71) |
+| VV clutter: measured ENL / fitted K shape ν | 4.35 / 296 | 2.30 / 3.9 |
+| Sea pixels above 5× local mean: measured vs K fit | 6.9e-4 vs 1.9e-6 | 2.1e-3 vs 1.7e-3 |
+
+Detection of AIS vessels hardly changes: 66 of the 78 are found in both runs. The
+false-alarm side is what moves, and the clutter statistics move with it.
+
+On the Earth Engine scene, the sea's bulk statistics are much spikier: ENL 2.3
+against 4.35. The scene-fitted K model picks this up (ν = 3.9) and now tracks the
+measured tail within a factor of about 1.3 at 5× the mean. The higher thresholds
+that follow cut the VV-only unexplained rate from 0.32 to 0.12 per km², without
+losing a vessel.
+
+The sensitivity table shows the clutter model now matters. On this scene the gamma
+CFAR gives **1.88 / km²** unexplained in VV, 15× the K-CFAR rate. On the
+Planetary Computer scene the two models were indistinguishable.
+
+I have not established why the two products differ this much in speckle. A likely
+cause is the thermal-noise subtraction in Earth Engine's preprocessing, because
+this calm sea is close to the noise floor. Different resampling in the two
+terrain-correction chains could also contribute.
+
+The practical lesson is that the clutter fit has to be redone for each product. A
+detector tuned on one preprocessing chain cannot be assumed to keep its false-alarm
+rate on another, even for the same pass.
 
 ---
 
@@ -387,6 +447,7 @@ check shows how much the choice matters on a sea that does.
 | False alarms | VV 0.32 / km² unexplained; VV + VH 0.059 / km² (upper bounds) | **VV alone is not enough**; dual-pol confirmation is needed in this sea. |
 | Length | Synthetic: blur-corrected error ≤ 3 m; real: median 15 %, two failure modes | **Usable for size classes**, not for exact length. |
 | Moving ships | Azimuth shift up to 400 m; correction adds 2 of 69 matches | **Needed**, small effect in an anchorage. |
+| Dependence on preprocessing | Same pass from Earth Engine: Pd 0.897, 66 vessels in common; VV unexplained 0.12 / km²; sea ENL 2.3 vs 4.35 | **Detection holds; the clutter and false-alarm rate depend on the product**, so the clutter fit has to be redone for each one. |
 
 The next steps follow from this: a length estimator that is robust to one dominant
 scatterer (e.g. the extent above a fraction of the hull's median, not its peak),
@@ -399,7 +460,7 @@ NY/NJ AOI already configured) to put intervals on the unexplained rate.
 | Source | Provider | Used for |
 |---|---|---|
 | [Sentinel-1 RTC](https://planetarycomputer.microsoft.com/dataset/sentinel-1-rtc) and [GRD annotation](https://planetarycomputer.microsoft.com/dataset/sentinel-1-grd) | ESA Copernicus; RTC processing by Catalyst; Microsoft Planetary Computer | VV/VH γ⁰; heading, zero-Doppler time, incidence, PRF |
-| [`COPERNICUS/S1_GRD`](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S1_GRD) (`_FLOAT`) | ESA Copernicus; Google Earth Engine | Alternative backend (not run) |
+| [`COPERNICUS/S1_GRD`](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S1_GRD) (`_FLOAT`) | ESA Copernicus; Google Earth Engine | VV/VH σ⁰ for the cross-check of the same scene |
 | [ESA WorldCover 10 m v200](https://esa-worldcover.org/) | ESA | Land / water mask |
 | [MarineCadastre AIS, 2021-10-21](https://coast.noaa.gov/htdata/CMSP/AISDataHandler/2021/) | BOEM / NOAA Office for Coastal Management | Vessel positions, lengths, speeds |
 
@@ -432,9 +493,10 @@ STAC identifiers of every Sentinel-1 pass used.
 - **AIS is not ground truth.** Many small craft do not broadcast, and positions can be
   off by the antenna offset and by report timing. "Unexplained" is therefore an upper
   bound on false alarms, and Pd is measured only on vessels that do broadcast.
-- **The real scene is RTC γ⁰ from Planetary Computer, not Earth Engine σ⁰.** CFAR is
-  scale-invariant, so the detector does not care. The Earth Engine path is written and
-  documented but was not run, because no registered EE project was available.
+- **Two products of one pass, not two passes.** The Earth Engine run is the same
+  acquisition processed differently, so it tests the dependence on preprocessing,
+  not on sea state or date. The headline numbers use the Planetary Computer RTC γ⁰
+  scene because it comes with the annotation (zero-Doppler time, PRFs).
 - **Terrain-corrected GRD, not SLC.** Speckle is resampled and correlated, and there
   is no sub-look or phase information. Sidelobes, ambiguities and blur are handled
   with published geometry, not by reprocessing.

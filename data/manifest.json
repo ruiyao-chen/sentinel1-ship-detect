@@ -78,5 +78,35 @@
       ]
     },
     "fetched_utc": "2026-10-26T16:51:27+00:00"
+  },
+  "s1_gee_lalb_2021-10-21": {
+    "scene_id": "S1A_IW_GRDH_1SDV_20211021T135247_20211021T135312_040218_04C3A1_F596",
+    "time_utc": "2021-10-21T13:53:00.202636Z",
+    "grid": {
+      "epsg": 32611,
+      "x0": 379320.0,
+      "y0": 3737420.0,
+      "pixel_m": 10.0,
+      "shape": [
+        2359,
+        2624
+      ]
+    },
+    "source": "gee",
+    "meta": {
+      "platform_heading_deg": 192.902200590482,
+      "relative_orbit": 71,
+      "incidence_plane": [
+        40.76656124578,
+        -0.06064743798398102,
+        0.01068514062581994
+      ],
+      "prf_hz": 1451.63,
+      "product": "COPERNICUS/S1_GRD_FLOAT",
+      "quantity": "sigma0, linear power",
+      "time_note": "slice start/stop times (ANX) interpolated along track to the AOI centre",
+      "landcover": "ESA/WorldCover/v200"
+    },
+    "fetched_utc": "2026-10-27T14:16:12+00:00"
   }
 }

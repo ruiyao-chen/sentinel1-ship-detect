@@ -1,0 +1,148 @@
+{
+  "script": "run_detect.py",
+  "args": {
+    "backend": "gee",
+    "project": "sar-ship-detection-portfolio",
+    "aoi": "lalb",
+    "date": "2021-10-21",
+    "orbit": 71,
+    "no_sensitivity": false
+  },
+  "utc": "2026-10-27T14:19:34+00:00",
+  "runtime_s": 152.8,
+  "python": "3.13.5",
+  "versions": {
+    "numpy": "2.1.3",
+    "pandas": "2.2.3"
+  },
+  "config": {
+    "cfar": {
+      "pfa": 1e-06,
+      "guard_px": 12,
+      "background_px": 40,
+      "min_background_frac": 0.25,
+      "clutter": "k",
+      "censor": true,
+      "censor_dilate_px": 3
+    },
+    "land_buffer_m": 100.0,
+    "merge_radius_px": 2,
+    "min_target_pixels": 2,
+    "core_db": 15.0,
+    "vh_confirm_pfa": 0.0001,
+    "match_gate_m": 200.0,
+    "dark_min_length_m": 20.0
+  },
+  "inputs": {
+    "ais_2021-10-21_lalb": {
+      "url": "https://coast.noaa.gov/htdata/CMSP/AISDataHandler/2021/AIS_2021_10_21.zip",
+      "file": "AIS_2021_10_21.zip",
+      "bytes": 353260900,
+      "sha256": "4505b13998629d80b68e92812397ebaddc58648f0226a3c41066a39242ac157c",
+      "bbox": [
+        -118.33,
+        33.53,
+        -117.99,
+        33.800000000000004
+      ],
+      "rows_kept": 158243,
+      "vessels_kept": 379,
+      "subset": "ais_2021-10-21_lalb.csv.gz",
+      "subset_sha256": "49869dead49ff6a6dade339a4e17332a68766f66ad3ffd5ee2d873ce108de387",
+      "raw_deleted": true,
+      "fetched_utc": "2026-10-26T16:31:18+00:00"
+    },
+    "s1_pc_lalb_2021-10-21": {
+      "scene_id": "S1A_IW_GRDH_1SDV_20211021T135247_20211021T135312_040218_04C3A1_rtc",
+      "time_utc": "2021-10-21T13:52:59.791402Z",
+      "grid": {
+        "epsg": 32611,
+        "x0": 379320.0,
+        "y0": 3737420.0,
+        "pixel_m": 10.0,
+        "shape": [
+          2359,
+          2624
+        ]
+      },
+      "source": "pc",
+      "meta": {
+        "platform_heading_deg": 192.902200590482,
+        "prf_hz": 1451.62711219399,
+        "prfs_hz": [
+          1717.128973878037,
+          1451.62711219399,
+          1685.817302492702
+        ],
+        "incidence_plane": [
+          41.36757681829298,
+          -0.05889011572934686,
+          0.011181359803099589
+        ],
+        "relative_orbit": 71,
+        "product": "sentinel-1-rtc",
+        "quantity": "gamma0 (RTC), linear power",
+        "annotation": "S1A_IW_GRDH_1SDV_20211021T135247_20211021T135312_040218_04C3A1",
+        "landcover": "esa-worldcover"
+      },
+      "fetched_utc": "2026-10-26T16:44:48+00:00"
+    },
+    "structures_lalb_o71": {
+      "dates": [
+        "2020-01-12",
+        "2020-03-12",
+        "2020-05-11",
+        "2020-07-10",
+        "2020-09-08",
+        "2023-01-20",
+        "2023-04-14",
+        "2023-07-07",
+        "2023-10-11"
+      ],
+      "orbit": 71,
+      "ratio": 3.0,
+      "n_pixels": 288043,
+      "grid": {
+        "epsg": 32611,
+        "x0": 379320.0,
+        "y0": 3737420.0,
+        "pixel_m": 10.0,
+        "shape": [
+          2359,
+          2624
+        ]
+      },
+      "fetched_utc": "2026-10-26T16:51:27+00:00"
+    },
+    "s1_gee_lalb_2021-10-21": {
+      "scene_id": "S1A_IW_GRDH_1SDV_20211021T135247_20211021T135312_040218_04C3A1_F596",
+      "time_utc": "2021-10-21T13:53:00.202636Z",
+      "grid": {
+        "epsg": 32611,
+        "x0": 379320.0,
+        "y0": 3737420.0,
+        "pixel_m": 10.0,
+        "shape": [
+          2359,
+          2624
+        ]
+      },
+      "source": "gee",
+      "meta": {
+        "platform_heading_deg": 192.902200590482,
+        "relative_orbit": 71,
+        "incidence_plane": [
+          40.76656124578,
+          -0.06064743798398102,
+          0.01068514062581994
+        ],
+        "prf_hz": 1451.63,
+        "product": "COPERNICUS/S1_GRD_FLOAT",
+        "quantity": "sigma0, linear power",
+        "time_note": "slice start/stop times (ANX) interpolated along track to the AOI centre",
+        "landcover": "ESA/WorldCover/v200"
+      },
+      "fetched_utc": "2026-10-27T14:16:12+00:00"
+    }
+  }
+}
